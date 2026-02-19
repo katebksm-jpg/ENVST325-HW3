@@ -68,16 +68,16 @@ plot(NHem$date, NHem$temperature_anomaly,
      pch=19,
      ylab="Temperature Anomaly (Degrees C)",
      xlab="Year",
-     col="green4")
+     col="#008B0080")
 
 #add Southern Hem to plot 
 points(SHem$date, SHem$temperature_anomaly,
        type="b",
        pch=19,
-       col="royalblue")
+       col="#4169E180")
 legend("topleft",
        c("Northern Hemisphere","Southern Hemisphere"), 
-       col=c("green4","royalblue"),
+       col=c("#008B0080","#4169E180"),
                pch=19, bty="n")
 
 #question - do I need to edit this graph (transparency?)
