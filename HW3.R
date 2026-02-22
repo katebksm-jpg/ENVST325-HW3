@@ -80,9 +80,6 @@ legend("topleft",
        col=c("#008B0080","#4169E180"),
                pch=19, bty="n")
 
-#question - do I need to edit this graph (transparency?)
-
-
 #make plot in GGplot
 ggplot(NSHemisphere, aes(x=date, y=temperature_anomaly, color=Entity))+
   geom_point()+
@@ -118,15 +115,12 @@ Highestemit <- datCO2[datCO2$Year>=1990 & datCO2$Entity=="India"|
 
 
 ggplot(data = Highestemit, aes(x=Year, y=CO2, color=Entity))+
-  geom_line()+
-  labs(title="Yearly Carbon Emissions Among the Four Highest Carbon Polluters",
+  geom_line(linewidth = 1.5)+
+  labs(title="Yearly Carbon Emissions Among the Today's Four Highest Carbon Polluters",
+       subtitle = "Changing Trends in Emissions Since 1990",
        x="Year", y="Annual Emissions (tons CO2)") +
-  theme_classic() 
-
-
-maxdate <- Highestemit %>%
-  group_by(Entity,Date) %>%
-  filter(CO2==max(CO2))
+  theme_classic()+
+  scale_color_manual(values=c("brown2", "#018960", "gray","royalblue"))
 
 
 #question2 - communicating change in world temperature and emissions
@@ -137,7 +131,8 @@ WorldCO2 <- datCO2[datCO2$Year>=1850 & datCO2$Entity=="World",]
 
 ggplot(data=WorldCO2, aes(x=Year, y=CO2))+
   geom_area(fill="#6A89A7")+
-  labs(title="Global Carbon Emissions Since 1850", x="Year", y="Global Emissions (tons of CO2)")+
+  labs(title="Global Carbon Emissions Since 1850", x="Year",
+       y="Global Emissions (tons of CO2)")+
          theme_classic()
 
 #graph global temperature anomaly  
@@ -146,9 +141,9 @@ unique(tempanom$Entity)
 WorldTemp <- tempanom[tempanom$Entity=="World",]
 
 ggplot(dat=WorldTemp, aes(x=date, y=temperature_anomaly))+
-  geom_line(color="tomato2")+
-  geom_point(color="tomato2") + 
-  geom_hline(yintercept = 0, linetype="dashed", linewidth=1, color="grey")+
+  geom_line(aes(color = temperature_anomaly))+
+  geom_point(aes(color=temperature_anomaly)) + 
+  scale_color_gradient2(low = "royalblue", high = "red", mid="lightgray",midpoint = 0) +
   labs(title="Global Temperature Anomalies Since 1880", x="Year", y="Temperature Anomaly(Degrees C)")+
   theme_classic()
 
@@ -183,20 +178,20 @@ mostdis <- FilteredDis %>%
   group_by(Entity) %>%
   summarise(total_disaster=sum(Disasters))
 
-#create new data frame for 5 most common disasters
+#create new data frame for 4 most common disasters
 mostcommon <- FilteredDis %>%
   filter(Entity=="Flood"|
            Entity=="Extreme weather"|
            Entity=="Earthquake"|
-           Entity=="Drought"|
-           Entity=="Wet mass movement")
+           Entity=="Drought")
 
 #create a graph for most common disasters 
 ggplot(dat=mostcommon, aes(x=Year, y=Disasters, fill=Entity))+
   geom_area()+
-  labs(title="Total Global Disasters", 
+  labs(title="Frequency of the Four Most Common Global Disasters Since 1900",
        x="Year", y="Number of Disasters") +
   theme_classic()
+  
 
 
 #(PROBABLY REMOVE THIS NEXT PART)
