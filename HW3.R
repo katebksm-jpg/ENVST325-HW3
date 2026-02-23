@@ -107,6 +107,12 @@ ggplot(data=Allemissions, aes(x=Entity, y=total_emissions, fill=Entity))+
 # Homework Prompts --------------------------------------------------------
 #question 1 - 
 unique(datCO2$Entity)
+#add new column to data set that converts raw billions into billions by dividing by 1 billion
+
+datCO2$billions <- datCO2$Annual.CO2.emissions..zero.filled./1000000000
+
+
+
 #create new data set 
 Highestemit <- datCO2[datCO2$Year>=1990 & datCO2$Entity=="India"|
                        datCO2$Year>=1990 & datCO2$Entity=="China"|
@@ -114,11 +120,12 @@ Highestemit <- datCO2[datCO2$Year>=1990 & datCO2$Entity=="India"|
                        datCO2$Year>=1990 & datCO2$Entity=="Russia",]
 
 
-ggplot(data = Highestemit, aes(x=Year, y=CO2, color=Entity))+
+ggplot(data = Highestemit, aes(x=Year, y=billions, color=Entity))+
   geom_line(linewidth = 1.5)+
   labs(title="Yearly Carbon Emissions Among the Today's Four Highest Carbon Polluters",
        subtitle = "Changing Trends in Emissions Since 1990",
-       x="Year", y="Annual Emissions (tons CO2)") +
+       x="Year", y="Annual Emissions (billions of tons of CO2)") +
+  scale_x_continuous(breaks = seq(1990, 2020, by = 5))+
   theme_classic()+
   scale_color_manual(values=c("brown2", "#018960", "gray","royalblue"))
 
@@ -129,11 +136,13 @@ ggplot(data = Highestemit, aes(x=Year, y=CO2, color=Entity))+
 
 WorldCO2 <- datCO2[datCO2$Year>=1880 & datCO2$Entity=="World",]
 
-ggplot(data=WorldCO2, aes(x=Year, y=CO2))+
+#graph new data set w/ billions of tons of CO2 as y axis
+ggplot(data=WorldCO2, aes(x=Year, y=billions))+
   geom_area(fill="#6A89A7")+
   labs(title="Global Carbon Emissions Since 1880", x="Year",
-       y="Global Emissions (tons of CO2)")+
+       y="Global Emissions (billions of tons of CO2)")+
          theme_classic()
+  
 
 #graph global temperature anomaly  
 unique(tempanom$Entity)
@@ -162,7 +171,7 @@ unique(disaster$Entity)
 
 #Data Frame that filters for categories that will duplicate/double count disasters
 FilteredDis <- disaster %>%
-  filter(Entity!="All disasters" &
+  filter(Year!=2025 & Entity!="All disasters" &
            Entity!="All disasters excluding earthquakes" &
            Entity!="All disasters excluding extreme temperature")
 
@@ -182,10 +191,10 @@ mostdis <- FilteredDis %>%
 
 #create new data frame for 4 most common disasters
 mostcommon <- FilteredDis %>%
-  filter(FilteredDis$Year>1950 & Entity=="Flood"|
-           FilteredDis$Year>1950 & Entity=="Extreme weather"|
-           FilteredDis$Year>1950 & Entity=="Earthquake"|
-           FilteredDis$Year>1950 & Entity=="Drought")
+  filter(FilteredDis$Year>=2000 & Entity=="Flood"|
+           FilteredDis$Year>=2000 & Entity=="Extreme weather"|
+           FilteredDis$Year>=2000 & Entity=="Earthquake"|
+           FilteredDis$Year>=2000 & Entity=="Drought")
 
 #create a graph for most common disasters 
 #load package with color palletes 
@@ -194,14 +203,15 @@ library(rcartocolor)
 
 ggplot(dat=mostcommon, aes(x=Year, y=Disasters, fill=Entity))+
   geom_col()+
-  labs(title="Frequency of the Four Most Common Global Disasters Since 1950",
+  labs(title="Frequency of the Four Most Common Global Disasters Since 2000",
        x="Year", y="Number of Disasters") +
   theme_classic()+
+  scale_x_continuous(breaks = seq(2000, 2024, by = 4))+
   scale_fill_manual(values = c("Flood"= "#59788E", "Earthquake"="#5c7256",
                                "Drought"= "#e19464", "Extreme weather"="#E4deb1"))
 clrs <- carto_pal(6, "Fall")
-                    
-  
+
+
 
 
 
