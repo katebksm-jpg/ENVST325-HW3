@@ -127,27 +127,29 @@ ggplot(data = Highestemit, aes(x=Year, y=CO2, color=Entity))+
 
 #world emissions - create new data set
 
-WorldCO2 <- datCO2[datCO2$Year>=1850 & datCO2$Entity=="World",]
+WorldCO2 <- datCO2[datCO2$Year>=1880 & datCO2$Entity=="World",]
 
 ggplot(data=WorldCO2, aes(x=Year, y=CO2))+
   geom_area(fill="#6A89A7")+
-  labs(title="Global Carbon Emissions Since 1850", x="Year",
+  labs(title="Global Carbon Emissions Since 1880", x="Year",
        y="Global Emissions (tons of CO2)")+
          theme_classic()
 
 #graph global temperature anomaly  
 unique(tempanom$Entity)
+#find earliest recorded day
+min(tempanom$Day)
 
+#make new data frame for World Temperatures 
 WorldTemp <- tempanom[tempanom$Entity=="World",]
 
 ggplot(dat=WorldTemp, aes(x=date, y=temperature_anomaly))+
   geom_line(aes(color = temperature_anomaly))+
   geom_point(aes(color=temperature_anomaly)) + 
+  scale_color_distiller(palette = "RdBu", direction = 1)+
   scale_color_gradient2(low = "royalblue", high = "red", mid="lightgray",midpoint = 0) +
   labs(title="Global Temperature Anomalies Since 1880", x="Year", y="Temperature Anomaly(Degrees C)")+
   theme_classic()
-
-min(tempanom$Day)
 
 
 #Question 3
@@ -180,34 +182,29 @@ mostdis <- FilteredDis %>%
 
 #create new data frame for 4 most common disasters
 mostcommon <- FilteredDis %>%
-  filter(Entity=="Flood"|
-           Entity=="Extreme weather"|
-           Entity=="Earthquake"|
-           Entity=="Drought")
+  filter(FilteredDis$Year>1950 & Entity=="Flood"|
+           FilteredDis$Year>1950 & Entity=="Extreme weather"|
+           FilteredDis$Year>1950 & Entity=="Earthquake"|
+           FilteredDis$Year>1950 & Entity=="Drought")
 
 #create a graph for most common disasters 
+#load package with color palletes 
+install.packages("rcartocolor")
+library(rcartocolor)
+
 ggplot(dat=mostcommon, aes(x=Year, y=Disasters, fill=Entity))+
-  geom_area()+
-  labs(title="Frequency of the Four Most Common Global Disasters Since 1900",
+  geom_col()+
+  labs(title="Frequency of the Four Most Common Global Disasters Since 1950",
        x="Year", y="Number of Disasters") +
-  theme_classic()
+  theme_classic()+
+  scale_fill_manual(values = c("Flood"= "#59788E", "Earthquake"="#5c7256",
+                               "Drought"= "#e19464", "Extreme weather"="#E4deb1"))
+clrs <- carto_pal(6, "Fall")
+                    
   
 
 
-#(PROBABLY REMOVE THIS NEXT PART)
 
-#find minimum filtered disaster year 
-min(FilteredDis$Year)
-
-#create a graph for carbon emissions focused on same timeline
-
-Emissions1900<- datCO2[datCO2$Year>=1900 & datCO2$Entity=="World",]
-
-ggplot(data=Emissions1900, aes(x=Year, y=CO2))+
-  geom_area(fill="#447099")+
-  labs(title="Global Carbon Emissions Since 1900", 
-       x="Year", y="Global Emissions (tons of CO2)") +
-  theme_classic()
 
 
 
