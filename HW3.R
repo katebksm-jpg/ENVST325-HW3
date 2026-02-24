@@ -109,17 +109,18 @@ ggplot(data=Allemissions, aes(x=Entity, y=total_emissions, fill=Entity))+
 #find the names of the countires included 
 unique(datCO2$Entity)
 
-#add new column to data set that converts raw billions into billions by dividing by 1 billion
-
-datCO2$billions <- datCO2$Annual.CO2.emissions..zero.filled./1000000000
-
-
 #create new data set for the 4 countires with the highest emissions
 Highestemit <- datCO2[datCO2$Year>=1990 & datCO2$Entity=="India"|
                        datCO2$Year>=1990 & datCO2$Entity=="China"|
                        datCO2$Year>=1990 & datCO2$Entity =="United States"|
                        datCO2$Year>=1990 & datCO2$Entity=="Russia",]
 
+
+#add new column to data set that converts raw billions into billions by dividing by 1 billion
+
+Highestemit$billions <- Highestemit$Annual.CO2.emissions..zero.filled./1000000000
+
+#create plot
 
 ggplot(data = Highestemit, aes(x=Year, y=billions, color=Entity))+
   geom_line(linewidth = 1.5)+
@@ -136,6 +137,9 @@ ggplot(data = Highestemit, aes(x=Year, y=billions, color=Entity))+
 #world emissions - create new data set
 
 WorldCO2 <- datCO2[datCO2$Year>=1880 & datCO2$Entity=="World",]
+
+#add column to data set for billions 
+WorldCO2$billions <- WorldCO2$CO2/1000000000
 
 #graph new data set w/ billions of tons of CO2 as y axis
 ggplot(data=WorldCO2, aes(x=Year, y=billions))+
@@ -213,6 +217,9 @@ mostcommon <- FilteredDis %>%
 install.packages("rcartocolor")
 library(rcartocolor)
 
+#find the Hexcodes for colors
+clrs <- carto_pal(6, "Fall")
+
 ggplot(dat=mostcommon, aes(x=Year, y=Disasters, fill=Entity))+
   geom_col()+
   labs(title="Floods and Extreme Weather Lead in Disaster Frequency", subtitle="Comparing the five most common natural disasters recorded worldwide since 2000",
@@ -222,8 +229,7 @@ ggplot(dat=mostcommon, aes(x=Year, y=Disasters, fill=Entity))+
   scale_fill_manual(values = c("Flood"= "#59788E", "Earthquake"="#5c7256",
                                "Drought"= "#e19464", "Extreme weather"="#E4deb1", 
                                "Extreme temperature"="tomato2"))
-#find the Hexcodes for colors
-clrs <- carto_pal(6, "Fall")
+
 
 
 
