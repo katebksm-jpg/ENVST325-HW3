@@ -118,7 +118,7 @@ Highestemit <- datCO2[datCO2$Year>=1990 & datCO2$Entity=="India"|
 
 #add new column to data set that converts raw billions into billions by dividing by 1 billion
 
-Highestemit$billions <- Highestemit$Annual.CO2.emissions..zero.filled./1000000000
+Highestemit$billions <- Highestemit$CO2/1000000000
 
 #create plot
 
@@ -173,6 +173,7 @@ ggplot(dat=WorldTemp, aes(x=date, y=temperature_anomaly))+
 
 
 #Question 3
+
 #Read in Data
 disaster<- read.csv("/cloud/project/activity03/number-of-natural-disaster-events.csv")
 
